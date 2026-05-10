@@ -1,12 +1,17 @@
-import { motion, useScroll, useTransform } from 'motion/react';
-import { Bot, MessageSquare, Zap, Target, ArrowRight, Layers, Workflow, CheckCircle2, ChevronRight } from 'lucide-react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
+import { Bot, MessageSquare, Zap, Target, ArrowRight, Layers, Workflow, CheckCircle2, ChevronRight, X, Send } from 'lucide-react';
 import { useState } from 'react';
 
 const Nav = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-midnight/80 backdrop-blur-md border-b border-white/5 py-4">
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <div className="text-xl font-display tracking-[0.2em] font-bold text-brand italic">DYNATMA</div>
+        <div className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-brand/10 rounded-lg flex items-center justify-center border border-brand/20">
+            <Zap className="w-5 h-5 text-brand fill-current" />
+          </div>
+          <div className="text-xl font-display tracking-[0.2em] font-bold text-brand italic">DYNATMA</div>
+        </div>
         <div className="hidden md:flex gap-10">
           {['Results', 'Solutions', 'Contact'].map((item) => (
             <a 
@@ -161,6 +166,19 @@ const Solutions = () => {
 };
 
 const Contact = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    // In a real app, you'd send data to a backend here
+    setTimeout(() => {
+      setShowForm(false);
+      setSubmitted(false);
+    }, 3000);
+  };
+
   return (
     <section id="contact" className="py-40 px-6 bg-midnight relative overflow-hidden">
       <div className="absolute inset-0 bg-brand/5 pointer-events-none" />
@@ -182,25 +200,108 @@ const Contact = () => {
             Schedule your free high-velocity automation audit and stop leaking revenue.
           </p>
           
-          <div className="flex flex-col items-center gap-10 z-10 relative">
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-brand/60 text-[10px] uppercase tracking-[0.4em] font-black">Direct Channel</span>
-              <div className="text-xl md:text-2xl font-display font-bold text-white hover:text-brand transition-colors cursor-default border-b border-white/10 pb-1">
-                Abdellah@dynatma.com
-              </div>
-            </div>
-            
-            <motion.a 
-              whileHover={{ scale: 1.02, translateY: -4 }}
-              whileTap={{ scale: 0.98 }}
-              href="mailto:Abdellah@dynatma.com"
-              className="group relative inline-flex items-center gap-6 bg-brand text-midnight px-14 py-6 font-black tracking-[0.15em] text-sm rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(6,182,212,0.3)] transition-all"
-            >
-              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
-              <Zap className="w-6 h-6 fill-current" />
-              <span>START YOUR AUDIT</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-            </motion.a>
+          <div className="flex flex-col items-center gap-10 z-10 relative w-full max-w-xl mx-auto">
+            <AnimatePresence mode="wait">
+              {!showForm ? (
+                <motion.div 
+                  key="cta-content"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="flex flex-col items-center gap-10"
+                >
+                  <div className="flex flex-col items-center gap-2">
+                    <span className="text-brand/60 text-[10px] uppercase tracking-[0.4em] font-black">Direct Channel</span>
+                    <div className="text-xl md:text-2xl font-display font-bold text-white hover:text-brand transition-colors cursor-default border-b border-white/10 pb-1">
+                      Abdellah@dynatma.com
+                    </div>
+                  </div>
+                  
+                  <motion.button 
+                    whileHover={{ scale: 1.02, translateY: -4 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => setShowForm(true)}
+                    className="group relative inline-flex items-center gap-6 bg-brand text-midnight px-14 py-6 font-black tracking-[0.15em] text-sm rounded-xl overflow-hidden shadow-[0_20px_50px_rgba(6,182,212,0.3)] transition-all cursor-pointer"
+                  >
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity" />
+                    <Zap className="w-6 h-6 fill-current" />
+                    <span>START YOUR AUDIT</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+                  </motion.button>
+                </motion.div>
+              ) : submitted ? (
+                <motion.div
+                  key="success-message"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="w-full bg-white/[0.03] border border-white/10 p-12 rounded-3xl backdrop-blur-xl flex flex-col items-center gap-6"
+                >
+                  <div className="w-20 h-20 bg-brand/20 rounded-full flex items-center justify-center">
+                    <CheckCircle2 className="w-10 h-10 text-brand" />
+                  </div>
+                  <h3 className="text-3xl font-display font-black text-white px-5">TRANSMISSION RECEIVED</h3>
+                  <p className="text-slate-muted font-medium px-5">Your request is being processed. Expect rapid response within 2 hours.</p>
+                </motion.div>
+              ) : (
+                <motion.div 
+                  key="audit-form"
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="w-full bg-white/[0.03] border border-white/10 p-8 rounded-3xl backdrop-blur-xl relative"
+                >
+                  <button 
+                    onClick={() => setShowForm(false)}
+                    className="absolute top-4 right-4 text-white/40 hover:text-white transition-colors"
+                  >
+                    <X className="w-6 h-6" />
+                  </button>
+                  
+                  <h3 className="text-2xl font-display font-black mb-8 text-white">IGNITE YOUR AUTO-GROWTH</h3>
+                  
+                  <form className="space-y-6" onSubmit={handleSubmit}>
+                    <div className="space-y-2 text-left">
+                      <label className="text-[10px] uppercase tracking-widest text-brand font-black ml-1">Full Name</label>
+                      <input 
+                        required
+                        type="text" 
+                        placeholder="John Doe"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-brand/50 transition-colors"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2 text-left">
+                      <label className="text-[10px] uppercase tracking-widest text-brand font-black ml-1">Work Email</label>
+                      <input 
+                        required
+                        type="email" 
+                        placeholder="john@company.com"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-brand/50 transition-colors"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2 text-left">
+                      <label className="text-[10px] uppercase tracking-widest text-brand font-black ml-1">Main Challenge</label>
+                      <textarea 
+                        required
+                        rows={3}
+                        placeholder="What bottleneck can we shatter?"
+                        className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-white focus:outline-none focus:border-brand/50 transition-colors resize-none"
+                      />
+                    </div>
+                    
+                    <button type="submit" className="w-full bg-brand text-midnight py-5 rounded-xl font-black tracking-widest text-sm hover:bg-white transition-all shadow-[0_10px_30px_rgba(6,182,212,0.2)] flex items-center justify-center gap-3">
+                      <Send className="w-4 h-4" />
+                      DEPLOY REQUEST
+                    </button>
+                    
+                    <p className="text-center text-[10px] text-white/30 uppercase tracking-tighter">
+                      Encrypting & transmitting via secure channel...
+                    </p>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           
           <div className="mt-12 text-[10px] uppercase tracking-[0.3em] text-brand z-10 relative font-black">
