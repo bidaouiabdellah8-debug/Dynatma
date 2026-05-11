@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
-import { Bot, MessageSquare, Zap, Target, ArrowRight, Layers, Workflow, CheckCircle2, ChevronRight, X, Send } from 'lucide-react';
+import { Bot, MessageSquare, Zap, Target, ArrowRight, Layers, Workflow, CheckCircle2, ChevronRight, X, Send, Linkedin } from 'lucide-react';
 import { useState } from 'react';
 
 const Nav = () => {
@@ -23,12 +23,23 @@ const Nav = () => {
             </a>
           ))}
         </div>
-        <a 
-          href="#contact" 
-          className="text-[11px] uppercase tracking-[0.2em] bg-brand/10 text-brand border border-brand/20 px-6 py-2 rounded-full hover:bg-brand hover:text-midnight transition-all duration-300 font-bold"
-        >
-          Consultation
-        </a>
+        <div className="flex items-center gap-6">
+          <a 
+            href="https://www.linkedin.com/in/abdellah-bidaoui-5174a3286" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-slate-muted hover:text-brand transition-colors p-2"
+            title="LinkedIn Profile"
+          >
+            <Linkedin className="w-5 h-5" />
+          </a>
+          <a 
+            href="#contact" 
+            className="text-[11px] uppercase tracking-[0.2em] bg-brand/10 text-brand border border-brand/20 px-6 py-2 rounded-full hover:bg-brand hover:text-midnight transition-all duration-300 font-bold"
+          >
+            Consultation
+          </a>
+        </div>
       </div>
     </nav>
   );
@@ -328,9 +339,17 @@ export default function App() {
           <div className="text-slate-muted text-[10px] tracking-[0.2em] font-bold">
             © 2026 DYNATMA SOLUTIONS — NEXT-GEN AI AUTOMATION
           </div>
-          <div className="flex gap-8">
+          <div className="flex items-center gap-8">
             <a href="mailto:Abdellah@dynatma.com" className="text-slate-muted hover:text-brand transition-colors text-[10px] uppercase tracking-[0.2em] font-bold">Contact</a>
-            <a href="#" className="text-slate-muted hover:text-brand transition-colors text-[10px] uppercase tracking-[0.2em] font-bold">LinkedIn</a>
+            <a 
+              href="https://www.linkedin.com/in/abdellah-bidaoui-5174a3286" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-muted hover:text-brand transition-colors flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold"
+            >
+              <Linkedin className="w-4 h-4" />
+              LinkedIn
+            </a>
           </div>
         </div>
       </footer>
