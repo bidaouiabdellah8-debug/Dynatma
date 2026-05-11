@@ -9,7 +9,7 @@ const Nav = () => {
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-brand/10 rounded-lg flex items-center justify-center border border-brand/20 overflow-hidden">
             <img 
-              src="https://r2.erweima.ai/ai_image/17469417865261899vbe2.jpg" 
+              src="https://r2.erweima.ai/ai_image/174694218337777at26.jpg" 
               alt="Dynatma Logo" 
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
