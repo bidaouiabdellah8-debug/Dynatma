@@ -1,41 +1,110 @@
 import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
-import { Bot, MessageSquare, Zap, Target, ArrowRight, Layers, Workflow, CheckCircle2, ChevronRight, X, Send, Linkedin } from 'lucide-react';
-import { useState } from 'react';
+import { Bot, MessageSquare, Zap, Target, ArrowRight, Layers, Workflow, CheckCircle2, ChevronRight, X, Send, Linkedin, Search, Command } from 'lucide-react';
+import { useState, useEffect, FormEvent } from 'react';
+
+const Logo = ({ className = "w-8 h-8" }: { className?: string }) => (
+  <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M12 10V30" stroke="#C0C0C0" stroke-width="3" stroke-linecap="round"/>
+    <path d="M12 10H22C27 10 31 14 31 20C31 26 27 30 22 30H12" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M22 20L31 11M31 11H25M31 11V17" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    <circle cx="12" cy="10" r="1.5" fill="#C0C0C0" />
+    <circle cx="12" cy="30" r="1.5" fill="#C0C0C0" />
+    <circle cx="31" cy="20" r="1.5" fill="#2563EB" />
+  </svg>
+);
+
+const GridBackground = () => (
+  <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+    <div 
+      className="absolute inset-0 opacity-[0.1]" 
+      style={{ 
+        backgroundImage: `linear-gradient(#06b6d4 1px, transparent 1px), linear-gradient(90deg, #06b6d4 1px, transparent 1px)`,
+        backgroundSize: '40px 40px'
+      }} 
+    />
+    <motion.div 
+      animate={{ 
+        y: ['0%', '100%'],
+        opacity: [0, 0.5, 0]
+      }}
+      transition={{ 
+        duration: 8,
+        repeat: Infinity,
+        ease: "linear"
+      }}
+      className="absolute top-0 left-0 right-0 h-[300px] bg-gradient-to-b from-transparent via-brand/20 to-transparent z-10"
+    />
+  </div>
+);
 
 const Nav = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-midnight/80 backdrop-blur-md border-b border-white/5 py-4">
+    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      isScrolled ? 'bg-midnight/90 backdrop-blur-xl border-b border-white/10 py-3' : 'bg-transparent py-6'
+    }`}>
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        <div className="flex items-center gap-3">
-          <div className="text-xl font-display tracking-[0.2em] font-bold text-brand italic">DYNATMA</div>
+        <div className="flex items-center gap-12">
+          <div className="flex items-center gap-3 group">
+            <div className="p-1.5 bg-white/5 rounded-lg border border-white/10 group-hover:border-brand/40 transition-all duration-300 transform group-hover:rotate-12">
+              <Logo className="w-7 h-7" />
+            </div>
+            <div className="text-xl font-display tracking-[0.25em] text-white italic group-hover:text-brand transition-colors uppercase">
+              <span className="font-black">DYN</span>
+              <span className="font-medium opacity-60">ATMA</span>
+            </div>
+          </div>
+          
+          <div className="hidden lg:flex gap-8">
+            {['Results', 'Solutions', 'Approach'].map((item) => (
+              <a 
+                key={item} 
+                href={`#${item.toLowerCase()}`} 
+                className="text-[10px] uppercase tracking-[0.3em] font-bold text-slate-muted hover:text-white transition-all relative group py-2"
+              >
+                {item}
+                <span className="absolute bottom-0 left-0 w-0 h-[1px] bg-brand group-hover:w-full transition-all duration-300" />
+              </a>
+            ))}
+          </div>
         </div>
-        <div className="hidden md:flex gap-10">
-          {['Results', 'Solutions', 'Contact'].map((item) => (
+
+        <div className="flex items-center gap-4 md:gap-8">
+          <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-white/10 px-4 py-2 rounded-full hover:border-brand/40 transition-colors group cursor-pointer">
+            <Search className="w-4 h-4 text-slate-muted group-hover:text-brand transition-colors" />
+            <span className="text-[9px] uppercase tracking-[0.1em] text-slate-muted font-bold">Search Services</span>
+            <div className="flex items-center gap-1 bg-white/10 px-1.5 py-0.5 rounded text-[8px] text-white/40">
+              <Command className="w-2.5 h-2.5" />
+              <span>K</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-4">
             <a 
-              key={item} 
-              href={`#${item.toLowerCase()}`} 
-              className="text-[11px] uppercase tracking-[0.2em] text-slate-muted hover:text-brand transition-colors"
+              href="https://www.linkedin.com/in/abdellah-bidaoui-5174a3286" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-slate-muted hover:text-brand transition-colors p-2 hidden xs:block"
+              title="LinkedIn Profile"
             >
-              {item}
+              <Linkedin className="w-4.5 h-4.5" />
             </a>
-          ))}
-        </div>
-        <div className="flex items-center gap-6">
-          <a 
-            href="https://www.linkedin.com/in/abdellah-bidaoui-5174a3286" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-slate-muted hover:text-brand transition-colors p-2"
-            title="LinkedIn Profile"
-          >
-            <Linkedin className="w-5 h-5" />
-          </a>
-          <a 
-            href="#contact" 
-            className="text-[11px] uppercase tracking-[0.2em] bg-brand/10 text-brand border border-brand/20 px-6 py-2 rounded-full hover:bg-brand hover:text-midnight transition-all duration-300 font-bold"
-          >
-            Consultation
-          </a>
+            <motion.a 
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              href="#contact" 
+              className="text-[10px] uppercase tracking-[0.2em] bg-white text-midnight px-6 py-2.5 rounded-full hover:bg-brand transition-colors font-black shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+            >
+              Consultation
+            </motion.a>
+          </div>
         </div>
       </div>
     </nav>
@@ -44,44 +113,109 @@ const Nav = () => {
 
 const Hero = () => {
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
+  const y = useTransform(scrollY, [0, 500], [0, 200]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const scale = useTransform(scrollY, [0, 400], [1, 0.95]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 px-6 overflow-hidden">
-      {/* Decorative Elements */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-[800px] bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.15)_0%,rgba(139,92,246,0.05)_50%,transparent_100%)] pointer-events-none" />
+    <section className="relative min-h-[110vh] flex flex-col items-center justify-center pt-20 pb-20 px-6 overflow-hidden">
+      <GridBackground />
+      
+      {/* Dynamic Background Element - The "Bolt" path */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-20">
+        <svg className="w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+          <motion.path 
+            initial={{ pathLength: 0, opacity: 0 }}
+            animate={{ pathLength: 1, opacity: 1 }}
+            transition={{ duration: 2, ease: "easeInOut" }}
+            d="M-100,500 L400,500 L450,400 L550,600 L600,500 L1100,500" 
+            stroke="rgba(6, 182, 212, 0.4)" 
+            strokeWidth="1" 
+            fill="none" 
+          />
+        </svg>
+      </div>
+
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(circle_at_50%_40%,rgba(6,182,212,0.1)_0%,rgba(13,14,18,0)_60%)] pointer-events-none" />
       
       <motion.div 
-        style={{ y }}
-        className="text-center z-10 max-w-4xl"
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+        style={{ y, opacity, scale }}
+        className="text-center z-10 max-w-6xl w-full"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 }
+          }
+        }}
       >
-        <span className="text-[11px] uppercase tracking-[0.5em] text-brand mb-8 block font-black">Next-Gen AI Systems</span>
-        <h1 className="text-6xl md:text-8xl font-display font-extrabold leading-[1.1] mb-8 tracking-[-0.04em]">
-          Automating High <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand to-secondary">Lead Velocity.</span>
-        </h1>
-        <p className="text-lg md:text-xl text-slate-muted font-medium max-w-2xl mx-auto mb-12 leading-relaxed">
-          We engineer hyper-efficient automation architectures to ignite high-velocity pipelines for rapidly scaling companies.
-        </p>
+        <motion.div
+          variants={{
+            hidden: { opacity: 0, y: 10 },
+            visible: { opacity: 1, y: 0 }
+          }}
+          className="flex justify-center mb-10"
+        >
+          <div className="bg-white/5 border border-white/10 px-4 py-1.5 rounded-full flex items-center gap-3">
+            <div className="w-2 h-2 rounded-full bg-brand animate-pulse" />
+            <span className="text-[10px] uppercase tracking-[0.3em] font-black text-white/50">Systems Operational — 2026.4.1</span>
+          </div>
+        </motion.div>
+
+        <motion.h1 
+          variants={{
+            hidden: { opacity: 0, y: 40 },
+            visible: { opacity: 1, y: 0 }
+          }}
+          className="text-7xl md:text-[9.5rem] font-display font-black leading-[0.85] mb-12 tracking-[-0.05em] uppercase text-white"
+        >
+          Hyper <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-br from-brand via-white to-secondary">Velocity.</span>
+        </motion.h1>
         
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <motion.a 
-            whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(6, 182, 212, 0.4)" }}
-            whileTap={{ scale: 0.95 }}
-            href="mailto:Abdellah@dynatma.com"
-            className="flex items-center gap-3 bg-brand text-midnight px-10 py-5 font-black rounded-lg group overflow-hidden relative shadow-[0_10px_40px_rgba(6,182,212,0.3)] transition-all"
+        <div className="flex flex-col md:flex-row justify-center items-start gap-12 md:gap-24 mb-16 max-w-4xl mx-auto">
+          <motion.p 
+            variants={{
+              hidden: { opacity: 0, x: -20 },
+              visible: { opacity: 1, x: 0 }
+            }}
+            className="text-lg md:text-xl text-slate-muted font-medium text-left md:max-w-[400px] leading-tight"
           >
-            <span className="relative z-10 tracking-wider">IGNITE GROWTH</span>
-            <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-          </motion.a>
+            We engineer high-performance automation architectures that transform cold pipelines into high-velocity revenue engines.
+          </motion.p>
           
-          <a href="#results" className="text-[12px] uppercase tracking-[0.2em] text-white/60 hover:text-brand transition-colors flex items-center gap-2 group font-bold">
-            Live Metrics <ChevronRight className="w-4 h-4 text-brand group-hover:translate-x-1 transition-transform" />
-          </a>
+          <motion.div 
+            variants={{
+              hidden: { opacity: 0, x: 20 },
+              visible: { opacity: 1, x: 0 }
+            }}
+            className="flex flex-col gap-6 w-full md:w-auto"
+          >
+            <motion.a 
+              whileHover={{ scale: 1.05, backgroundColor: '#06b6d4', color: '#020617' }}
+              whileTap={{ scale: 0.95 }}
+              href="mailto:Abdellah@dynatma.com"
+              className="flex items-center justify-between gap-12 bg-white text-midnight px-8 py-5 font-black rounded-sm group transition-all"
+            >
+              <span className="tracking-widest text-xs uppercase">Get Started</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </motion.a>
+            <div className="flex items-center justify-between text-[10px] text-white/40 font-black tracking-widest border-t border-white/5 pt-4 uppercase">
+              <span>Strategy Led</span>
+              <span className="text-brand">AI Powered</span>
+            </div>
+          </motion.div>
         </div>
+
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-20"
+        >
+          <div className="w-[1px] h-20 bg-gradient-to-b from-brand to-transparent mx-auto" />
+        </motion.div>
       </motion.div>
     </section>
   );
@@ -141,14 +275,32 @@ const Results = () => {
 
 const Solutions = () => {
   return (
-    <section id="solutions" className="py-32 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-24">
+    <section id="solutions" className="py-32 px-6 relative overflow-hidden">
+      <div className="absolute inset-0 bg-brand/5 backdrop-blur-3xl -z-10 opacity-20" />
+      <div className="max-w-7xl mx-auto relative">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-24"
+        >
           <span className="text-brand uppercase tracking-[0.4em] text-[10px] font-black mb-4 block underline decoration-secondary decoration-2 underline-offset-4">Our Technology</span>
           <h2 className="text-5xl font-display font-extrabold pb-2">Future-Proof Architecture.</h2>
-        </div>
+        </motion.div>
 
-        <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: { staggerChildren: 0.1 }
+            }
+          }}
+          className="grid md:grid-cols-3 lg:grid-cols-4 gap-8"
+        >
           {[
             { icon: Workflow, title: "Automation Hubs", desc: "Complex, logic-heavy automation controllers that unite your entire business ecosystem." },
             { icon: MessageSquare, title: "Smart Chat", desc: "Vibrant AI chatbots with personified logic designed to drive massive user engagement." },
@@ -159,15 +311,28 @@ const Solutions = () => {
             { icon: Bot, title: "Cognitive AI", desc: "Leveraging state-of-the-art models to perform intelligent lead scoring and automated follow-ups." },
             { icon: Zap, title: "Integrated Stacks", desc: "Tailored integration of enterprise tools for a unified and seamless data source." }
           ].map((item, idx) => (
-            <div key={idx} className="p-8 bg-white/[0.02] border border-white/5 hover:bg-white/[0.05] hover:border-brand/30 transition-all rounded-2xl flex flex-col items-center text-center group">
-              <div className="p-4 bg-brand/5 rounded-xl mb-6 group-hover:bg-brand/20 transition-colors">
+            <motion.div 
+              key={idx}
+              variants={{
+                hidden: { opacity: 0, y: 30, scale: 0.9 },
+                visible: { opacity: 1, y: 0, scale: 1 }
+              }}
+              whileHover={{ 
+                translateY: -8, 
+                boxShadow: "0 20px 40px rgba(6, 182, 212, 0.15)",
+                borderColor: "rgba(6, 182, 212, 0.4)"
+              }}
+              className="p-8 bg-white/[0.02] border border-white/5 transition-all rounded-2xl flex flex-col items-center text-center group relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-brand opacity-0 group-hover:opacity-[0.02] transition-opacity" />
+              <div className="p-4 bg-brand/5 rounded-xl mb-6 group-hover:bg-brand/20 transition-colors relative z-10">
                 <item.icon className="w-8 h-8 text-brand stroke-2" />
               </div>
-              <h3 className="text-lg font-display font-bold mb-4 tracking-wide">{item.title}</h3>
-              <p className="text-slate-muted text-xs leading-relaxed font-medium">{item.desc}</p>
-            </div>
+              <h3 className="text-lg font-display font-bold mb-4 tracking-wide relative z-10">{item.title}</h3>
+              <p className="text-slate-muted text-xs leading-relaxed font-medium relative z-10">{item.desc}</p>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -177,7 +342,7 @@ const Contact = () => {
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     // In a real app, you'd send data to a backend here
@@ -321,18 +486,70 @@ const Contact = () => {
   );
 };
 
+const ToolsTicker = () => {
+  const tools = [
+    { name: "AWS", logo: "https://cdn.worldvectorlogo.com/logos/aws-2.svg" },
+    { name: "Zapier", logo: "https://cdn.worldvectorlogo.com/logos/zapier.svg" },
+    { name: "Make", logo: "https://cdn.worldvectorlogo.com/logos/make-5.svg" },
+    { name: "n8n", logo: "https://cdn.worldvectorlogo.com/logos/n8n.svg" },
+    { name: "ClickUp", logo: "https://cdn.worldvectorlogo.com/logos/clickup.svg" },
+    { name: "GoHighLevel", logo: "https://gohighlevel.com/wp-content/uploads/2021/01/logo-1.png" },
+    { name: "Airtable", logo: "https://cdn.worldvectorlogo.com/logos/airtable.svg" },
+    { name: "HubSpot", logo: "https://cdn.worldvectorlogo.com/logos/hubspot.svg" },
+    { name: "Google Cloud", logo: "https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg" },
+    { name: "Manychat", logo: "https://cdn.worldvectorlogo.com/logos/manychat.svg" }
+  ];
+
+  return (
+    <div className="py-16 bg-[#0F172A] border-y border-white/5 overflow-hidden relative">
+      {/* Edge Fades */}
+      <div className="absolute inset-y-0 left-0 w-48 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/80 to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-48 bg-gradient-to-l from-[#0F172A] via-[#0F172A]/80 to-transparent z-10 pointer-events-none" />
+      
+      <motion.div 
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ 
+          duration: 30, 
+          repeat: Infinity, 
+          ease: "linear",
+          repeatType: "loop"
+        }}
+        className="flex gap-20 whitespace-nowrap w-fit px-10 hover:[animation-play-state:paused]"
+      >
+        {[...tools, ...tools].map((tool, idx) => (
+          <div key={idx} className="flex items-center justify-center h-10 min-w-[80px]">
+            <img 
+              src={tool.logo} 
+              alt={tool.name} 
+              className="h-10 w-auto opacity-60 grayscale brightness-[1.5] hover:opacity-100 hover:grayscale-0 hover:brightness-[1.2] hover:scale-110 transition-all duration-300 object-contain cursor-pointer"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+};
+
 export default function App() {
   return (
     <div className="min-h-screen bg-midnight selection:bg-brand selection:text-midnight">
       <Nav />
       <Hero />
+      <ToolsTicker />
       <Results />
       <Solutions />
       <Contact />
       
       <footer className="py-20 px-6 bg-midnight border-t border-white/5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="text-2xl font-display text-brand tracking-widest font-black italic">DYNATMA</div>
+          <div className="flex items-center gap-4 group">
+            <Logo className="w-10 h-10" />
+            <div className="text-2xl font-display text-white tracking-widest italic uppercase">
+              <span className="font-black">DYN</span>
+              <span className="font-medium opacity-70">ATMA</span>
+            </div>
+          </div>
           <div className="text-slate-muted text-[10px] tracking-[0.2em] font-bold">
             © 2026 DYNATMA SOLUTIONS — NEXT-GEN AI AUTOMATION
           </div>
