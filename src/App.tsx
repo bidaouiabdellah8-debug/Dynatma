@@ -488,18 +488,18 @@ const Contact = () => {
 
 const ToolsTicker = () => {
   const tools = [
-    { name: "AWS", logo: "https://cdn.worldvectorlogo.com/logos/aws-2.svg" },
-    { name: "Zapier", logo: "https://cdn.worldvectorlogo.com/logos/zapier.svg" },
-    { name: "Make", logo: "https://cdn.worldvectorlogo.com/logos/make-5.svg" },
-    { name: "n8n", logo: "https://cdn.worldvectorlogo.com/logos/n8n.svg" },
-    { name: "ClickUp", logo: "https://cdn.worldvectorlogo.com/logos/clickup.svg" },
-    { name: "GoHighLevel", logo: "https://gohighlevel.com/wp-content/uploads/2021/01/logo-1.png" },
-    { name: "Airtable", logo: "https://cdn.worldvectorlogo.com/logos/airtable.svg" },
-    { name: "HubSpot", logo: "https://cdn.worldvectorlogo.com/logos/hubspot.svg" },
-    { name: "Google Cloud", logo: "https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg" },
-    { name: "Manychat", logo: "https://cdn.worldvectorlogo.com/logos/manychat.svg" }
-  ];
-
+    // APRÈS — SVG inline, couleurs vives, pas de dépendances externes
+const tools = [
+  {
+    name: "AWS",
+    svg: `<svg viewBox="0 0 100 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M28 35c-1 0-2-1-2-2V20c0-1 1-2 2-2h4c1 0 2 1 2 2v13c0 1-1 2-2 2h-4z" fill="#FF9900"/>
+      <path d="M38 35c-1 0-2-1-2-2V15c0-1 1-2 2-2h4c1 0 2 1 2 2v18c0 1-1 2-2 2h-4z" fill="#FF9900"/>
+      ...
+    </svg>`
+  },
+  // ... 9 autres outils avec SVG inline colorés
+];
   return (
     <div className="py-16 bg-[#0F172A] border-y border-white/5 overflow-hidden relative">
       {/* Edge Fades */}
@@ -516,16 +516,22 @@ const ToolsTicker = () => {
         }}
         className="flex gap-20 whitespace-nowrap w-fit px-10 hover:[animation-play-state:paused]"
       >
-        {[...tools, ...tools].map((tool, idx) => (
-          <div key={idx} className="flex items-center justify-center h-10 min-w-[80px]">
-            <img 
-              src={tool.logo} 
-              alt={tool.name} 
-              className="h-10 w-auto opacity-60 grayscale brightness-[1.5] hover:opacity-100 hover:grayscale-0 hover:brightness-[1.2] hover:scale-110 transition-all duration-300 object-contain cursor-pointer"
-              referrerPolicy="no-referrer"
-            />
-          </div>
-        ))}
+       // APRÈS
+{[...tools, ...tools].map((tool, idx) => (
+  <div 
+    key={idx} 
+    className="flex items-center justify-center h-12 min-w-[100px] group cursor-pointer"
+    title={tool.name}
+  >
+    <div 
+      className="h-10 w-auto opacity-50 grayscale brightness-[1.3] group-hover:opacity-100 group-hover:grayscale-0 group-hover:brightness-[1.1] group-hover:scale-110 transition-all duration-300"
+      dangerouslySetInnerHTML={{ __html: tool.svg }}
+    />
+  </div>
+))}
+        <div className="text-center mb-8">
+  <span className="text-[10px] uppercase tracking-[0.3em] text-[#6366F1] font-black">Our Automation Stack</span>
+</div>
       </motion.div>
     </div>
   );
